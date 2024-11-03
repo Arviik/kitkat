@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">KitKat</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="title_message">Message</string>
+    <string name="title_profil">Profil</string>
+    <string name="title_friend">Friend</string>
+    <string name="title_add">Ajout</string>
+</resources>

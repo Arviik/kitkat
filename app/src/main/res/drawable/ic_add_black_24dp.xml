@@ -1,0 +1,14 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24.0"
+    android:viewportHeight="24.0">
+
+    <!-- Cercle avec le symbole "+" découpé -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillType="evenOdd"
+        android:pathData="
+            M12,2a10,10 0,1 1,-10 10,10 10,0 0,1 10,-10z
+            M11,6h2v5h5v2h-5v5h-2v-5H6v-2h5z" />
+</vector>

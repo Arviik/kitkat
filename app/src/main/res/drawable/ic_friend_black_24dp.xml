@@ -1,0 +1,16 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24.0"
+    android:viewportHeight="24.0">
+
+    <!-- Silhouette du premier personnage (à gauche) -->
+    <path
+        android:fillColor="#FF000000"
+        android:pathData="M8,9a3,3 0,1 1,6 0a3,3 0,0 1,-6 0zM5,18a5,5 0,0 1,10 0H5z" />
+
+    <!-- Silhouette du second personnage (à droite et en arrière-plan, plus bas) -->
+    <path
+        android:fillColor="#FF000000"
+        android:pathData="M14,10a2.5,2.5 0,1 1,5 0a2.5,2.5 0,0 1,-5 0zM10.5,18a4.5,4.5 0,0 1,9 0H10.5z" />
+</vector>

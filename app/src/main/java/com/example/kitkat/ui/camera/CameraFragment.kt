@@ -28,30 +28,42 @@ class CameraFragment : Fragment() {
 
     //Variable pour la caméra
     private lateinit var cameraProviderFuture: ListenableFuture<ProcessCameraProvider> //Permet de mieux gérer la caméra apperement, Future = asynchrone
+    private var isUsingBackCamera = false
+
 
     fun bindPreview(cameraProvider: ProcessCameraProvider){
         var preview: Preview = Preview.Builder().build();
-        var cameraSelector: CameraSelector = CameraSelector.Builder()
-            .requireLensFacing(CameraSelector.LENS_FACING_BACK).build()
+        var cameraSelector: CameraSelector = if (isUsingBackCamera) {
+            CameraSelector.Builder()
+                .requireLensFacing(CameraSelector.LENS_FACING_FRONT).build()
+        } else {
+            CameraSelector.Builder()
+                .requireLensFacing(CameraSelector.LENS_FACING_BACK).build()
+        }
 
         preview.setSurfaceProvider(binding.previewView.surfaceProvider)
 
         var camera = cameraProvider.bindToLifecycle(this as LifecycleOwner, cameraSelector, preview)
     }
 
+    private fun switchCamera() {
+        isUsingBackCamera = !isUsingBackCamera
+
+        cameraProviderFuture = ProcessCameraProvider.getInstance(activity as MainActivity)
+        cameraProviderFuture.addListener(Runnable {
+            val cameraProvider = cameraProviderFuture.get();
+            if (_binding != null){
+                cameraProvider.unbindAll()
+                bindPreview(cameraProvider)
+            }
+        }, ContextCompat.getMainExecutor(activity as MainActivity))
+    }
+
     private fun takePhoto() {}
 
     private fun captureVideo() {}
 
-    private fun startCamera() {
-
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
 
         val cameraViewModel =
@@ -60,24 +72,25 @@ class CameraFragment : Fragment() {
         _binding = FragmentCameraBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        if ((activity as MainActivity).allPermissionsGranted()) {
-            startCamera()
-        } else {
+        if (!(activity as MainActivity).allPermissionsGranted()) {
             ActivityCompat.requestPermissions((activity as MainActivity), REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS)
         }
 
 
-        // Set up the listeners for take photo and video capture buttons
-
         cameraProviderFuture = ProcessCameraProvider.getInstance(activity as MainActivity)
         cameraProviderFuture.addListener(Runnable {
             val cameraProvider = cameraProviderFuture.get();
-            bindPreview(cameraProvider)
+            if (_binding != null){
+                bindPreview(cameraProvider)
+            }
         }, ContextCompat.getMainExecutor(activity as MainActivity))
         /*val textView: TextView = binding.textCamera
         cameraViewModel.text.observe(viewLifecycleOwner) {
             textView.text = it
         }*/
+        binding.btnSwitchCamera.setOnClickListener {
+            switchCamera()
+        }
 
         return root
     }

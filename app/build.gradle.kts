@@ -51,6 +51,9 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    implementation (libs.glide)
+    annotationProcessor (libs.compiler)
+
 
     val camerax_version = "1.5.0-alpha03"
     implementation("androidx.camera:camera-core:${camerax_version}")

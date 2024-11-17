@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
@@ -19,6 +20,8 @@ import com.example.kitkat.databinding.FragmentCameraBinding
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private var previousFragmentId: Int? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,6 +35,37 @@ class MainActivity : AppCompatActivity() {
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
 
         navView.setupWithNavController(navController)
+
+        // les _ c pour evité de mettre des parametre que on va pas utilisé exemple ici ca prend un listener en parmaetre composé de 3 argument mais moi j'ai besoin que de destination
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            when (destination.id) {
+                R.id.navigation_camera -> {
+                    navView.visibility = View.GONE
+                }
+                else -> {
+                    navView.visibility = View.VISIBLE
+                    previousFragmentId = destination.id
+                }
+            }
+        }
+        fun navigateToCameraFragment() {
+            val bundle = Bundle().apply {
+                putInt("previousFragmentId", previousFragmentId ?: R.id.navigation_home)
+            }
+            navController.navigate(R.id.navigation_camera, bundle)
+        }
+        navView.setOnNavigationItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.navigation_camera -> {
+                    navigateToCameraFragment() // Appeler la méthode centralisée
+                    true
+                }
+                else -> {
+                    navController.navigate(menuItem.itemId) // Navigation par défaut
+                    true
+                }
+            }
+        }
     }
 
     override fun onRequestPermissionsResult(

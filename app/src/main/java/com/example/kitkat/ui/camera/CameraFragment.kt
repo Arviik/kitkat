@@ -1,15 +1,21 @@
 package com.example.kitkat.ui.camera
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.camera.core.Camera
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
-import androidx.camera.view.PreviewView
+import androidx.camera.video.FallbackStrategy
+import androidx.camera.video.Quality
+import androidx.camera.video.QualitySelector
+import androidx.camera.video.Recorder
+import androidx.camera.video.VideoCapture
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -29,11 +35,16 @@ class CameraFragment : Fragment() {
     //Variable pour la caméra
     private lateinit var cameraProviderFuture: ListenableFuture<ProcessCameraProvider> //Permet de mieux gérer la caméra apperement, Future = asynchrone
     private var isUsingBackCamera = false
+    private var isRecording = false
+
+    val qualitySelector = QualitySelector.fromOrderedList(
+        listOf(Quality.UHD, Quality.FHD, Quality.HD, Quality.SD),
+        FallbackStrategy.lowerQualityOrHigherThan(Quality.SD))
 
 
-    fun bindPreview(cameraProvider: ProcessCameraProvider){
-        var preview: Preview = Preview.Builder().build();
-        var cameraSelector: CameraSelector = if (isUsingBackCamera) {
+    fun bindPreview(cameraProvider: ProcessCameraProvider) {
+        val preview: Preview = Preview.Builder().build()
+        val cameraSelector: CameraSelector = if (isUsingBackCamera) {
             CameraSelector.Builder()
                 .requireLensFacing(CameraSelector.LENS_FACING_FRONT).build()
         } else {
@@ -43,7 +54,11 @@ class CameraFragment : Fragment() {
 
         preview.setSurfaceProvider(binding.previewView.surfaceProvider)
 
-        var camera = cameraProvider.bindToLifecycle(this as LifecycleOwner, cameraSelector, preview)
+        val recorder = Recorder.Builder().setQualitySelector(qualitySelector).build()
+        val videoCapture = VideoCapture.withOutput(recorder)
+
+        cameraProvider.unbindAll()
+        cameraProvider.bindToLifecycle(this as LifecycleOwner, cameraSelector, preview, videoCapture)
     }
 
     private fun switchCamera() {
@@ -51,19 +66,31 @@ class CameraFragment : Fragment() {
 
         cameraProviderFuture = ProcessCameraProvider.getInstance(activity as MainActivity)
         cameraProviderFuture.addListener(Runnable {
-            val cameraProvider = cameraProviderFuture.get();
-            if (_binding != null){
+            val cameraProvider = cameraProviderFuture.get()
+            if (_binding != null) {
                 cameraProvider.unbindAll()
                 bindPreview(cameraProvider)
             }
         }, ContextCompat.getMainExecutor(activity as MainActivity))
     }
 
-    private fun takePhoto() {}
+    private fun toggleRecording() {
+        isRecording = !isRecording
+        if (isRecording) {
+            binding.btnRecord.setBackgroundColor(Color.RED)
+            binding.recordIndicator.visibility = ImageView.VISIBLE
+        } else {
 
-    private fun captureVideo() {}
+            binding.btnRecord.setBackgroundColor(Color.BLACK)
+            binding.recordIndicator.visibility = ImageView.INVISIBLE
+        }
+    }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
 
         val cameraViewModel =
@@ -73,23 +100,40 @@ class CameraFragment : Fragment() {
         val root: View = binding.root
 
         if (!(activity as MainActivity).allPermissionsGranted()) {
-            ActivityCompat.requestPermissions((activity as MainActivity), REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS)
+            ActivityCompat.requestPermissions(
+                (activity as MainActivity),
+                REQUIRED_PERMISSIONS,
+                REQUEST_CODE_PERMISSIONS
+            )
         }
 
 
         cameraProviderFuture = ProcessCameraProvider.getInstance(activity as MainActivity)
         cameraProviderFuture.addListener(Runnable {
             val cameraProvider = cameraProviderFuture.get();
-            if (_binding != null){
+            if (_binding != null) {
                 bindPreview(cameraProvider)
             }
         }, ContextCompat.getMainExecutor(activity as MainActivity))
-        /*val textView: TextView = binding.textCamera
-        cameraViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
-        }*/
+
         binding.btnSwitchCamera.setOnClickListener {
             switchCamera()
+        }
+
+        binding.btnRecord.setOnClickListener {
+            toggleRecording()
+        }
+
+        binding.btnRecord.setOnTouchListener { v, event ->
+            when (event.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    toggleRecording()
+                }
+                MotionEvent.ACTION_UP -> {
+                    toggleRecording()
+                }
+            }
+            true
         }
 
         return root

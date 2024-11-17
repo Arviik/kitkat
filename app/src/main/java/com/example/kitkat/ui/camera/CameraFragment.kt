@@ -21,9 +21,11 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.example.kitkat.MainActivity
 import com.example.kitkat.MainActivity.Companion.REQUEST_CODE_PERMISSIONS
 import com.example.kitkat.MainActivity.Companion.REQUIRED_PERMISSIONS
+import com.example.kitkat.R
 import com.example.kitkat.databinding.FragmentCameraBinding
 import com.google.common.util.concurrent.ListenableFuture
 
@@ -118,6 +120,12 @@ class CameraFragment : Fragment() {
 
         binding.btnSwitchCamera.setOnClickListener {
             switchCamera()
+        }
+
+        binding.btnBack.setOnClickListener {
+            val previousFragmentId = arguments?.getInt("previousFragmentId") ?: R.id.navigation_home
+            // je met ?: R.id.navigation_home car navigate prend pas de int?
+            findNavController().navigate(previousFragmentId);
         }
 
         binding.btnRecord.setOnClickListener {

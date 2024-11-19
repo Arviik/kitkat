@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.kitkat"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -75,7 +75,6 @@ dependencies {
 
     implementation("org.jetbrains.exposed:exposed-json:$exposedVersion")
     implementation("org.jetbrains.exposed:exposed-money:$exposedVersion")
-    implementation("org.jetbrains.exposed:exposed-spring-boot-starter:$exposedVersion")
 
     val postresqlDriverVersion: String by project
     implementation("org.postgresql:postgresql:$postresqlDriverVersion")

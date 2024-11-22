@@ -78,4 +78,7 @@ dependencies {
 
     val postresqlDriverVersion: String by project
     implementation("org.postgresql:postgresql:$postresqlDriverVersion")
+
+    val slf4jVersion: String by project
+    implementation("org.slf4j:slf4j-simple:$slf4jVersion")
 }

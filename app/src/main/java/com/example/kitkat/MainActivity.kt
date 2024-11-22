@@ -16,6 +16,10 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.kitkat.databinding.ActivityMainBinding
 import com.example.kitkat.databinding.FragmentCameraBinding
+import com.example.kitkat.model.dao.DatabaseHelper
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
@@ -25,6 +29,10 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        CoroutineScope(Dispatchers.IO).launch {
+            DatabaseHelper.initDatabase()               //Fonctionne pas + fait crash l'app
+        }
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)

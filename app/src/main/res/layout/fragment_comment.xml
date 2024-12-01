@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
+
+
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/commentRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/commentInputLayout" />
+
+    <LinearLayout
+        android:id="@+id/commentInputLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="8dp"
+        android:gravity="center_vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:background="@android:color/white"
+        android:elevation="2dp">
+
+        <ImageView
+            android:id="@+id/profileImage"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginEnd="8dp"
+            android:src="@drawable/ic_profil_black_font_grey_24dp"
+            android:scaleType="centerCrop"
+            android:background="@drawable/circle_background" />
+
+        <EditText
+            android:id="@+id/commentInput"
+            android:layout_width="0dp"
+            android:layout_height="36dp"
+            android:layout_weight="1"
+            android:hint="Ajouter un commentaire..."
+            android:padding="8dp"
+            android:background="@drawable/rounded_edittext_background"
+            android:textColor="@android:color/black"
+            android:textSize="14sp"
+            android:gravity="center_vertical" />
+
+        <ImageButton
+            android:id="@+id/postButton"
+            android:layout_width="50dp"
+            android:layout_height="36dp"
+            android:src="@drawable/ic_send_button"
+            android:background="@drawable/rounded_pink_background"
+            android:contentDescription="Send comment"
+            android:layout_marginStart="8dp" />
+
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

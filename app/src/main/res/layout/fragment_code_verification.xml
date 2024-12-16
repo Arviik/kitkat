@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/tv_code_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Consulte tes e-mails"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_gravity="center" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Utilise le lien ou saisis le code envoyé à ton adresse e-mail."
+        android:layout_marginTop="16dp"
+        android:textSize="14sp" />
+
+    <EditText
+        android:id="@+id/edit_text_code"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Code de vérification"
+        android:inputType="number"
+        android:layout_marginTop="24dp" />
+
+    <Button
+        android:id="@+id/button_verify"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="Vérifier"
+        android:backgroundTint="#FF6F91"
+        android:textColor="#FFFFFF" />
+
+</LinearLayout>

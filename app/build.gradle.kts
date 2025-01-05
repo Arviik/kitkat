@@ -39,6 +39,8 @@ android {
 }
 
 dependencies {
+    implementation (libs.retrofit)
+    implementation (libs.converter.gson)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
@@ -56,6 +58,8 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
     implementation (libs.glide)
     annotationProcessor (libs.compiler)
+
+
 
 
     val camerax_version = "1.5.0-alpha03"

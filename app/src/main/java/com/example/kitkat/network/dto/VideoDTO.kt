@@ -1,6 +1,4 @@
-package com.example.kitkat.api.models.dataclass
-
-
+package com.example.kitkat.network.dto
 
 data class VideoDTO(
     val id: Int? = null,

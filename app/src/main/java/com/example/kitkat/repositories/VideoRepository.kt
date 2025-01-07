@@ -1,6 +1,6 @@
 package com.example.kitkat.repositories
 
-import com.example.kitkat.api.models.dataclass.VideoWithAuthor
+import com.example.kitkat.network.dto.VideoWithAuthor
 import com.example.kitkat.network.ApiClient
 import com.example.kitkat.network.services.VideoService
 

@@ -1,5 +1,6 @@
 package com.example.kitkat.ui.login
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +10,9 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.kitkat.R
+import com.example.kitkat.app_utils.SHARED_PREF_KEY
+import com.example.kitkat.network.dto.UserDTO
+import com.example.kitkat.repositories.UserRepository
 
 class UsernameInputFragment : Fragment() {
     override fun onCreateView(
@@ -22,6 +26,24 @@ class UsernameInputFragment : Fragment() {
 
         button.setOnClickListener {
             if (usernameInput.text.isNotEmpty()) {
+                val sharedPref = activity?.getSharedPreferences(SHARED_PREF_KEY, Context.MODE_PRIVATE) ?: return@setOnClickListener
+
+                val email = sharedPref.getString("email", "defaultEmail").toString()
+                val password = sharedPref.getString("password", "defaultPassword").toString()
+                val username = usernameInput.text.toString()
+
+                println("email: " + email + " password: " + password + "username: " + username)
+
+                UserRepository.registerUser(
+                    UserDTO(
+                        email = email,
+                        passwordHash = password,
+                        name = username
+                    ),
+                    onSuccess = {},
+                    onError = {}
+                )
+
                 Toast.makeText(context, "Inscription terminée !", Toast.LENGTH_SHORT).show()
             } else {
                 Toast.makeText(context, "Veuillez entrer un pseudo", Toast.LENGTH_SHORT).show()

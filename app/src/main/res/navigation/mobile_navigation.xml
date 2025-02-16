@@ -31,13 +31,35 @@
         android:id="@+id/navigation_profile"
         android:name="com.example.kitkat.ui.profile.ProfileFragment"
         android:label="@string/title_profil"
-        tools:layout="@layout/fragment_profile" />
+        tools:layout="@layout/fragment_profile">
+    <action
+        android:id="@+id/action_profile_to_profileVideos"
+        app:destination="@id/navigation_profile_videos" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_friend"
         android:name="com.example.kitkat.ui.friend.FriendFragment"
         android:label="@string/title_friend"
         tools:layout="@layout/fragment_friend" />
+
+    <fragment
+        android:id="@+id/navigation_profile_videos"
+        android:name="com.example.kitkat.ui.profile.ProfileVideoFragment"
+        android:label="Vidéos"
+        tools:layout="@layout/fragment_profile_video" />
+
+    <fragment
+        android:id="@+id/profileVideos"
+        android:name="com.example.kitkat.ui.profile.video.VideoPagerFragment"
+        android:label="Profile Videos">
+        <argument
+            android:name="videos"
+            app:argType="com.example.kitkat.api.models.dataclass.VideoWithAuthor[]" />
+        <argument
+            android:name="videoPosition"
+            app:argType="integer" />
+    </fragment>
 
 
 </navigation>

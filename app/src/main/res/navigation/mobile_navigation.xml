@@ -22,10 +22,29 @@
         android:name="com.example.kitkat.ui.camera.CameraFragment"
         android:label="@string/title_camera"
         tools:layout="@layout/fragment_camera" >
+        <!-- Action vers VideoPreviewFragment -->
+        <action
+            android:id="@+id/action_camera_to_videoPreview"
+            app:destination="@id/navigation_video_preview" />
         <argument
             android:name="previousFragmentId"
             app:argType="integer"/>
     </fragment>
+
+    <fragment
+        android:id="@+id/navigation_video_preview"
+        android:name="com.example.kitkat.ui.camera.VideoPreviewFragment"
+        android:label="VideoPreviewFragment"
+        tools:layout="@layout/fragment_video_preview">
+        <action
+            android:id="@+id/action_videoPreview_to_videoDescription"
+            app:destination="@id/videoDescriptionFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/videoDescriptionFragment"
+        android:name="com.example.kitkat.ui.camera.VideoDescriptionFragment"
+        android:label="Description Vidéo" />
 
     <fragment
         android:id="@+id/navigation_profile"

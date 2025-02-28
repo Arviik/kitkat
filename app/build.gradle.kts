@@ -61,7 +61,10 @@ dependencies {
     annotationProcessor (libs.compiler)
 
 
+    implementation (libs.okhttp)
+    implementation (libs.logging.interceptor)
 
+    implementation ("com.arthenica:ffmpeg-kit-full:6.0-2.LTS")
 
     val camerax_version = "1.5.0-alpha03"
     implementation("androidx.camera:camera-core:${camerax_version}")

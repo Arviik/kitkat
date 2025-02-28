@@ -148,7 +148,11 @@ class VideoPagerAdapter(
         }
 
         holder.commentButton.setOnClickListener {
-            val comment = CommentFragment()
+            val comment = CommentFragment().apply {
+                arguments = Bundle().apply {
+                    videoWithAuthor.first.id?.let { it1 -> putInt("videoId", it1) } // 🔹 Passe l'ID de la vidéo
+                }
+            }
             comment.show(parentFragmentManager, "CommentBottomSheet")
         }
         holder.likeButton.setOnClickListener {

@@ -1,5 +1,6 @@
 package com.example.kitkat.network
 
+import com.example.kitkat.network.services.VideoService
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -12,4 +13,5 @@ object ApiClient {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
+    val videoService: VideoService by lazy { retrofit.create(VideoService::class.java) }
 }

@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.kitkat.R
 import com.example.kitkat.app_utils.SHARED_PREF_KEY
+import com.example.kitkat.network.dto.LoginRequestDTO
 import com.example.kitkat.network.dto.UserDTO
 import com.example.kitkat.repositories.UserRepository
 
@@ -40,7 +41,16 @@ class UsernameInputFragment : Fragment() {
                         email = email,
                         password = password
                     ),
-                    onSuccess = {},
+                    onSuccess = {
+                        UserRepository.loginUser(
+                            LoginRequestDTO(
+                                email = email,
+                                password = password
+                            ),
+                            onSuccess = {},
+                            onError = {}
+                        )
+                    },
                     onError = {}
                 )
 

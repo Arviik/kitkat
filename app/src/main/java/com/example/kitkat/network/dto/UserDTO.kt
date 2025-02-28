@@ -23,3 +23,7 @@ data class LoginRequestDTO(
     val email: String,
     val password: String
 )
+data class LoginResponseDTO(
+    val token: String,
+    val message: String
+)

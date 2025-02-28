@@ -6,6 +6,6 @@ import retrofit2.http.Body
 import retrofit2.http.POST
 
 interface UserService {
-    @POST("/auth/register")
+    @POST("auth/register")
     fun registerUser(@Body userDto: UserDTO): Call<Unit>
 }

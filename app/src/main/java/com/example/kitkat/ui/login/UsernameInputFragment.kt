@@ -32,13 +32,13 @@ class UsernameInputFragment : Fragment() {
                 val password = sharedPref.getString("password", "defaultPassword").toString()
                 val username = usernameInput.text.toString()
 
-                println("email: " + email + " password: " + password + "username: " + username)
+                println("email: $email password: $password username: $username")
 
                 UserRepository.registerUser(
                     UserDTO(
+                        name = username,
                         email = email,
-                        passwordHash = password,
-                        name = username
+                        password = password
                     ),
                     onSuccess = {},
                     onError = {}

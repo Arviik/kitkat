@@ -12,13 +12,7 @@ class UserRepository {
         private val api = ApiClient.retrofit.create(UserService::class.java)
 
         fun registerUser(userDto: UserDTO, onSuccess: (Boolean) -> Unit, onError: (Throwable) -> Unit) {
-            val call = api.registerUser(
-                UserDTO(
-                    name = userDto.name,
-                    email = userDto.email,
-                    passwordHash = userDto.passwordHash
-                )
-            )
+            val call = api.registerUser(userDto)
             call.enqueue(object : Callback<Unit> {
                 override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
                     if (response.isSuccessful) {

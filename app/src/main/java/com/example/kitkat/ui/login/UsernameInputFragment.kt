@@ -1,6 +1,7 @@
 package com.example.kitkat.ui.login
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +10,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.example.kitkat.MainActivity
 import com.example.kitkat.R
 import com.example.kitkat.app_utils.SHARED_PREF_KEY
 import com.example.kitkat.network.dto.LoginRequestDTO
@@ -42,6 +44,7 @@ class UsernameInputFragment : Fragment() {
                         password = password
                     ),
                     onSuccess = {
+                        Toast.makeText(context, "Inscription réussie, connexion en cours...", Toast.LENGTH_SHORT).show()
                         UserRepository.loginUser(
                             LoginRequestDTO(
                                 email = email,
@@ -53,20 +56,26 @@ class UsernameInputFragment : Fragment() {
                                     apply()
                                 }
 
-                                //TODO redirect to main app
+                                navigateToMainActivity()
                             },
                             onError = {}
                         )
                     },
-                    onError = {}
+                    onError = {
+                        Toast.makeText(context, "Erreur lors de l'inscription", Toast.LENGTH_SHORT).show()
+                    }
                 )
-
-                Toast.makeText(context, "Inscription terminée !", Toast.LENGTH_SHORT).show()
             } else {
                 Toast.makeText(context, "Veuillez entrer un pseudo", Toast.LENGTH_SHORT).show()
             }
         }
 
         return view
+    }
+
+    private fun navigateToMainActivity() {
+        val intent = Intent(requireContext(), MainActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
     }
 }

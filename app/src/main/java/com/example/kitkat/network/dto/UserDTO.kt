@@ -1,4 +1,5 @@
 package com.example.kitkat.network.dto
+import java.io.Serializable
 
 data class UserDTO(
     val id: Int? = null,
@@ -18,7 +19,8 @@ data class UserWithoutPasswordDTO(
     val bio: String? = null,
     val followersCount: Int = 0,
     val followingCount: Int = 0
-)
+) : Serializable
+
 data class LoginRequestDTO(
     val email: String,
     val password: String

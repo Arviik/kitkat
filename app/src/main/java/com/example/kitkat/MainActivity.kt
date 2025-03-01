@@ -14,19 +14,21 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.kitkat.app_utils.SHARED_PREF_KEY
 import com.example.kitkat.databinding.ActivityMainBinding
+import com.example.kitkat.repositories.UserRepository
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private var previousFragmentId: Int? = null
     private lateinit var sharedPref: SharedPreferences
+    private lateinit var userRepository: UserRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        sharedPref = this.getSharedPreferences(SHARED_PREF_KEY, Context.MODE_PRIVATE)
+        userRepository = UserRepository(this)
 
-        if (sharedPref.contains("AUTH_TOKEN")) {
+        if (userRepository.getToken() != null) {
             binding = ActivityMainBinding.inflate(layoutInflater)
             setContentView(binding.root)
 
@@ -65,7 +67,6 @@ class MainActivity : AppCompatActivity() {
             }
         } else {
             setContentView(R.layout.activity_login)
-
             findNavController(R.id.nav_host_fragment_activity_login)
         }
     }

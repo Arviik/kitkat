@@ -22,22 +22,63 @@
         android:name="com.example.kitkat.ui.camera.CameraFragment"
         android:label="@string/title_camera"
         tools:layout="@layout/fragment_camera" >
+        <!-- Action vers VideoPreviewFragment -->
+        <action
+            android:id="@+id/action_camera_to_videoPreview"
+            app:destination="@id/navigation_video_preview" />
         <argument
             android:name="previousFragmentId"
             app:argType="integer"/>
     </fragment>
 
     <fragment
+        android:id="@+id/navigation_video_preview"
+        android:name="com.example.kitkat.ui.camera.VideoPreviewFragment"
+        android:label="VideoPreviewFragment"
+        tools:layout="@layout/fragment_video_preview">
+        <action
+            android:id="@+id/action_videoPreview_to_videoDescription"
+            app:destination="@id/videoDescriptionFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/videoDescriptionFragment"
+        android:name="com.example.kitkat.ui.camera.VideoDescriptionFragment"
+        android:label="Description Vidéo" />
+
+    <fragment
         android:id="@+id/navigation_profile"
         android:name="com.example.kitkat.ui.profile.ProfileFragment"
         android:label="@string/title_profil"
-        tools:layout="@layout/fragment_profile" />
+        tools:layout="@layout/fragment_profile">
+    <action
+        android:id="@+id/action_profile_to_profileVideos"
+        app:destination="@id/navigation_profile_videos" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_friend"
         android:name="com.example.kitkat.ui.friend.FriendFragment"
         android:label="@string/title_friend"
         tools:layout="@layout/fragment_friend" />
+
+    <fragment
+        android:id="@+id/navigation_profile_videos"
+        android:name="com.example.kitkat.ui.profile.ProfileVideoFragment"
+        android:label="Vidéos"
+        tools:layout="@layout/fragment_profile_video" />
+
+    <fragment
+        android:id="@+id/profileVideos"
+        android:name="com.example.kitkat.ui.profile.video.VideoPagerFragment"
+        android:label="Profile Videos">
+        <argument
+            android:name="videos"
+            app:argType="com.example.kitkat.network.dto.VideoWithAuthor[]" />
+        <argument
+            android:name="videoPosition"
+            app:argType="integer" />
+    </fragment>
 
 
 </navigation>

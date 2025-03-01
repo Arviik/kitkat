@@ -1,6 +1,7 @@
 package com.example.kitkat.ui.home.video
 import android.annotation.SuppressLint
 import android.net.Uri
+import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
@@ -10,16 +11,20 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.SeekBar
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.PlayerView
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.kitkat.R
+import com.example.kitkat.api.models.dataclass.UserWithoutPasswordDTO
 import com.example.kitkat.network.dto.VideoWithAuthor
 import com.example.kitkat.ui.comment.CommentFragment
+import com.example.kitkat.ui.profile.ProfileFragment
 
 class VideoPagerAdapter(
     private var videos: List<VideoWithAuthor>,
@@ -65,11 +70,15 @@ class VideoPagerAdapter(
 
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: VideoViewHolder, position: Int) {
+
         val videoWithAuthor = videos[position]
         if (videoWithAuthor.first == null || videoWithAuthor.first.videoUrl.isNullOrEmpty()) {
             Log.e("VideoPagerAdapter", "Video or Video URL is null at position $position")
             return
         }
+        Log.d("VideoPagerAdapter", "URL vidéo : $videoWithAuthor.first.videoUrl")
+        Log.d("VideoPagerAdapter", "URL miniature : ${videoWithAuthor.first.thumbnailUrl}")
+
         val videoUrl = videoWithAuthor.first.videoUrl
         val profileImageUrl = videoWithAuthor.second.profilePictureUrl
         val author = videoWithAuthor.second
@@ -139,7 +148,11 @@ class VideoPagerAdapter(
         }
 
         holder.commentButton.setOnClickListener {
-            val comment = CommentFragment()
+            val comment = CommentFragment().apply {
+                arguments = Bundle().apply {
+                    videoWithAuthor.first.id?.let { it1 -> putInt("videoId", it1) } // 🔹 Passe l'ID de la vidéo
+                }
+            }
             comment.show(parentFragmentManager, "CommentBottomSheet")
         }
         holder.likeButton.setOnClickListener {
@@ -151,7 +164,19 @@ class VideoPagerAdapter(
             // Ajouter ici l'interaction pour le partage
             Log.d("VideoPagerAdapter", "Share clicked for video ${videoWithAuthor.first.id}")
         }
+        holder.profileImage.setOnClickListener {
+            val user = author
+
+            val bundle = Bundle().apply {
+                putSerializable("user", user)
+                putInt("videoPosition", position) // position de la vidéo
+            }
+
+            val navController = Navigation.findNavController(holder.itemView)
+            navController.navigate(R.id.navigation_profile, bundle)
+        }
     }
+
 
     override fun getItemCount(): Int = videos.size
 

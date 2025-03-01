@@ -11,7 +11,6 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.SeekBar
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
@@ -21,9 +20,8 @@ import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.kitkat.R
-import com.example.kitkat.api.models.dataclass.VideoWithAuthor
+import com.example.kitkat.network.dto.VideoWithAuthor
 import com.example.kitkat.ui.comment.CommentFragment
-import com.example.kitkat.ui.profile.ProfileFragment
 
 class VideoPagerAdapter(
     private var videos: List<VideoWithAuthor>,

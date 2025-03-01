@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
 import com.example.kitkat.R
-import com.example.kitkat.api.models.dataclass.VideoWithAuthor
+import com.example.kitkat.network.dto.VideoWithAuthor
 import com.example.kitkat.ui.home.video.VideoPagerAdapter
 
 class VideoPagerFragment : Fragment() {

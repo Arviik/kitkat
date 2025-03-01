@@ -1,9 +1,8 @@
 package com.example.kitkat.network.services
 
-import com.example.kitkat.api.models.dataclass.VideoDTO
+import com.example.kitkat.network.dto.VideoDTO
 import retrofit2.Call
-import com.example.kitkat.api.models.dataclass.VideoWithAuthor
-import com.example.kitkat.network.dto.CommentDTO
+import com.example.kitkat.network.dto.VideoWithAuthor
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST

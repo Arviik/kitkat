@@ -3,8 +3,7 @@ package com.example.kitkat.ui.profile.video
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.example.kitkat.api.models.dataclass.VideoWithAuthor
-import com.example.kitkat.model.VideoItem
+import com.example.kitkat.network.dto.VideoWithAuthor
 
 class ViewPagerRecyclerAdapter(
     fragmentActivity: FragmentActivity,

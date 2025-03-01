@@ -74,7 +74,7 @@
         android:label="Profile Videos">
         <argument
             android:name="videos"
-            app:argType="com.example.kitkat.api.models.dataclass.VideoWithAuthor[]" />
+            app:argType="com.example.kitkat.network.dto.VideoWithAuthor[]" />
         <argument
             android:name="videoPosition"
             app:argType="integer" />

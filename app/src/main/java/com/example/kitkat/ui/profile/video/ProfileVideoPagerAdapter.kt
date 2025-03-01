@@ -1,6 +1,5 @@
 package com.example.kitkat.ui.profile.video
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,7 +10,7 @@ import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.PlayerView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.kitkat.R
-import com.example.kitkat.api.models.dataclass.VideoWithAuthor
+import com.example.kitkat.network.dto.VideoWithAuthor
 
 class ProfileVideoPagerAdapter(
     private var videos: List<VideoWithAuthor>,

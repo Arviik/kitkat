@@ -1,11 +1,11 @@
-package com.example.kitkat.api.models.dataclass
+package com.example.kitkat.network.dto
 import java.io.Serializable
 
 data class UserDTO(
     val id: Int? = null,
     val name: String,
     val email: String,
-    val passwordHash: String,
+    val password: String,
     val profilePictureUrl: String? = null,
     val bio: String? = null,
     val followersCount: Int = 0, // valeur par défaut

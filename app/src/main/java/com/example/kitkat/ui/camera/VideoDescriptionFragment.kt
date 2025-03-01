@@ -15,13 +15,12 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.kitkat.R
-import com.example.kitkat.api.models.dataclass.VideoDTO
+import com.example.kitkat.network.dto.VideoDTO
 import com.example.kitkat.network.ApiClient
 import com.example.kitkat.network.services.AzureUploadService
 import com.example.kitkat.network.services.VideoService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody

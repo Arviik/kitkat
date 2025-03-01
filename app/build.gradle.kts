@@ -53,6 +53,7 @@ dependencies {
     implementation(libs.androidx.media3.ui)
     implementation(libs.androidx.media3.exoplayer)
     implementation(libs.androidx.activity)
+    implementation ("com.google.android.gms:play-services-auth:20.6.0")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

@@ -4,9 +4,9 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
-import com.example.kitkat.api.models.dataclass.UserWithoutPasswordDTO
-import com.example.kitkat.api.models.dataclass.VideoDTO
-import com.example.kitkat.api.models.dataclass.VideoWithAuthor
+import com.example.kitkat.network.dto.UserWithoutPasswordDTO
+import com.example.kitkat.network.dto.VideoDTO
+import com.example.kitkat.network.dto.VideoWithAuthor
 
 class VideoPlayerFragment : Fragment() {
 

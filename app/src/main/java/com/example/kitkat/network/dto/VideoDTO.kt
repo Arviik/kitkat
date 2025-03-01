@@ -1,4 +1,4 @@
-package com.example.kitkat.api.models.dataclass
+package com.example.kitkat.network.dto
 
 import android.os.Parcel
 import android.os.Parcelable

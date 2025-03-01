@@ -47,7 +47,14 @@ class UsernameInputFragment : Fragment() {
                                 email = email,
                                 password = password
                             ),
-                            onSuccess = {},
+                            onSuccess = {
+                                with(sharedPref.edit()) {
+                                    putString("AUTH_TOKEN", it.token)
+                                    apply()
+                                }
+
+                                //TODO redirect to main app
+                            },
                             onError = {}
                         )
                     },

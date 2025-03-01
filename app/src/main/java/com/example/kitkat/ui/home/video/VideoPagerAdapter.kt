@@ -21,7 +21,6 @@ import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.kitkat.R
-import com.example.kitkat.api.models.dataclass.UserWithoutPasswordDTO
 import com.example.kitkat.api.models.dataclass.VideoWithAuthor
 import com.example.kitkat.ui.comment.CommentFragment
 import com.example.kitkat.ui.profile.ProfileFragment

@@ -11,7 +11,6 @@ data class UserDTO(
     val followersCount: Int = 0, // valeur par défaut
     val followingCount: Int = 0  // valeur par défaut
 )
-
 data class UserWithoutPasswordDTO(
     val id: Int? = null,
     val name: String,
@@ -22,8 +21,11 @@ data class UserWithoutPasswordDTO(
     val followingCount: Int = 0
 ) : Serializable
 
-
 data class LoginRequestDTO(
     val email: String,
     val password: String
+)
+data class LoginResponseDTO(
+    val token: String,
+    val message: String
 )

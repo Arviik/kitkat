@@ -3,9 +3,8 @@ package com.example.kitkat.model
 import android.os.Parcel
 import android.os.Parcelable
 
-data class ConversationItem(val username: String, val lastMessage: String, val timeLasted: String, val profilePicUrl: String) : Parcelable{
+data class ConversationItem(val username: String, val lastMessage: String, val profilePicUrl: String) : Parcelable{
     constructor(parcel: Parcel) : this(
-        parcel.readString().toString(),
         parcel.readString().toString(),
         parcel.readString().toString(),
         parcel.readString().toString()

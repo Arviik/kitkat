@@ -1,6 +1,5 @@
 package com.example.kitkat.ui.message
 
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,11 +7,11 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.kitkat.R
 import com.example.kitkat.model.ConversationItem
-import com.example.kitkat.ui.message.conversation.ConversationActivity
 
-
-class MessageConversationAdapter(private val conversations: List<ConversationItem>, private val onConversationClick: (username: String, id: String) -> Unit):
-    RecyclerView.Adapter<MessageConversationAdapter.MessageConversationViewHolder>() {
+class MessageConversationAdapter(
+    private var conversations: List<ConversationItem>,
+    private val onConversationClick: (username: String, id: String) -> Unit
+) : RecyclerView.Adapter<MessageConversationAdapter.MessageConversationViewHolder>() {
 
     class MessageConversationViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val lastMessage: TextView = itemView.findViewById(R.id.messageLastMessageText)
@@ -27,14 +26,19 @@ class MessageConversationAdapter(private val conversations: List<ConversationIte
     }
 
     override fun onBindViewHolder(holder: MessageConversationViewHolder, position: Int) {
-        holder.lastMessage.text = conversations[position].lastMessage
-        holder.username.text = conversations[position].username
-        holder.timeSince.text = conversations[position].timeLasted
+        val conversation = conversations[position]
+        holder.lastMessage.text = conversation.lastMessage
+        holder.username.text = conversation.username
 
         holder.itemView.setOnClickListener {
-            onConversationClick(conversations[position].username, "1")
+            onConversationClick(conversation.username, "1")
         }
     }
 
     override fun getItemCount(): Int = conversations.size
+
+    fun updateItems(newItems: List<ConversationItem>) {
+        conversations = newItems
+        notifyDataSetChanged() // Rafraîchit la RecyclerView avec les nouvelles données
+    }
 }

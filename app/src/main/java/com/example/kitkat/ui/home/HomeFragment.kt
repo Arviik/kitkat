@@ -9,8 +9,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
-import com.example.kitkat.R
-import com.example.kitkat.api.models.dataclass.VideoWithAuthor
+import com.example.kitkat.network.dto.VideoWithAuthor
 import com.example.kitkat.databinding.FragmentHomeBinding
 import com.example.kitkat.network.services.VideoService
 import com.example.kitkat.ui.home.video.VideoPagerAdapter
@@ -18,10 +17,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import com.example.kitkat.network.ApiClient
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import kotlin.math.log
 
 class HomeFragment : Fragment() {
 

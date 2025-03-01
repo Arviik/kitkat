@@ -7,10 +7,11 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.kitkat.R
+import com.example.kitkat.model.ConversationItem
 import com.example.kitkat.model.MessageItem
 import com.example.kitkat.model.MessageSender
 
-class ConversationAdapter(private val messages: List<MessageItem>) :
+class ConversationAdapter(private var messages: List<MessageItem>) :
     RecyclerView.Adapter<ConversationAdapter.ConversationViewHolder>() {
 
     class ConversationViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -66,5 +67,8 @@ class ConversationAdapter(private val messages: List<MessageItem>) :
         holder.message.text = messages[position].message
     }
 
-
+    fun updateItems(newItems: List<MessageItem>) {
+        messages = newItems
+        notifyDataSetChanged() // Rafraîchit la RecyclerView avec les nouvelles données
+    }
 }

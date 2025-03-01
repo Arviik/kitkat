@@ -18,7 +18,7 @@ import androidx.media3.ui.PlayerView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.kitkat.R
-import com.example.kitkat.api.models.dataclass.VideoWithAuthor
+import com.example.kitkat.network.dto.VideoWithAuthor
 import com.example.kitkat.ui.comment.CommentFragment
 
 class VideoPagerAdapter(

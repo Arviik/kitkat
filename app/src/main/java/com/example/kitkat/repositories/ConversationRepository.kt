@@ -1,6 +1,6 @@
 package com.example.kitkat.repositories
 
-import com.example.kitkat.api.models.dataclass.Conversation
+import com.example.kitkat.network.dto.Conversation
 import com.example.kitkat.network.ApiClient
 import com.example.kitkat.network.services.ConversationService
 import retrofit2.Call

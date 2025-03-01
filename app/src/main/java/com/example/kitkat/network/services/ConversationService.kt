@@ -1,6 +1,6 @@
 package com.example.kitkat.network.services
 
-import com.example.kitkat.api.models.dataclass.Conversation
+import com.example.kitkat.network.dto.Conversation
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET

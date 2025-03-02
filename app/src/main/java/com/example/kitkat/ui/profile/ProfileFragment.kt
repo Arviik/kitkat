@@ -138,18 +138,15 @@ class ProfileFragment : Fragment() {
             binding.shareProfileButton.visibility = View.GONE
             binding.followButton.visibility = View.VISIBLE
             binding.messageButton.visibility = View.VISIBLE
-        }
 
-        // Ajoute un clic sur le bouton "Suivre"
-        binding.followButton.setOnClickListener {
-            Toast.makeText(requireContext(), "Suivi ${user.name} !", Toast.LENGTH_SHORT).show()
-        }
+            user.id?.let { checkIfFollowing(it, currentUserId) }
 
-        // Ajoute un clic sur le bouton "Message"
-        binding.messageButton.setOnClickListener {
-            Toast.makeText(requireContext(), "Message à ${user.name}", Toast.LENGTH_SHORT).show()
+            binding.followButton.setOnClickListener {
+                user.id?.let { it1 -> toggleFollow(it1, currentUserId) }
+            }
         }
     }
+
 
 
     private fun fetchUserVideos(user: UserWithoutPasswordDTO) {
@@ -182,6 +179,62 @@ class ProfileFragment : Fragment() {
                 Toast.makeText(requireContext(), "Erreur réseau", Toast.LENGTH_SHORT).show()
             }
         })
+    }
+    private fun checkIfFollowing(userId: Int, currentUserId: Int) {
+        val userService = ApiClient.retrofit.create(UserService::class.java)
+
+        userService.isFollowingUser(userId, currentUserId).enqueue(object : Callback<Map<String, Boolean>> {
+            override fun onResponse(call: Call<Map<String, Boolean>>, response: Response<Map<String, Boolean>>) {
+                if (response.isSuccessful) {
+                    val isFollowing = response.body()?.get("isFollowing") ?: false
+                    updateFollowButton(isFollowing)
+                } else {
+                    Log.e("ProfileFragment", "Erreur lors de la vérification du follow: ${response.code()}")
+                }
+            }
+
+            override fun onFailure(call: Call<Map<String, Boolean>>, t: Throwable) {
+                Log.e("ProfileFragment", "Erreur réseau: ${t.message}")
+            }
+        })
+    }
+
+    private fun toggleFollow(userId: Int, currentUserId: Int) {
+        val userService = ApiClient.retrofit.create(UserService::class.java)
+
+        val call = if (binding.followButton.text == "Suivre") {
+            userService.followUser(userId, currentUserId)
+        } else {
+            userService.unfollowUser(userId, currentUserId)
+        }
+
+        call.enqueue(object : Callback<Unit> {
+            override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
+                if (response.isSuccessful) {
+                    val newStatus = binding.followButton.text == "Suivre"
+                    updateFollowButton(newStatus)
+                    Log.d("ProfileFragment", "Follow status changé pour $userId")
+                } else {
+                    Log.e("ProfileFragment", "Erreur API: ${response.code()}")
+                }
+            }
+
+            override fun onFailure(call: Call<Unit>, t: Throwable) {
+                Log.e("ProfileFragment", "Erreur réseau: ${t.message}")
+            }
+        })
+    }
+
+    private fun updateFollowButton(isFollowing: Boolean) {
+        if (isFollowing) {
+            binding.followButton.text = "Suivi"
+            binding.followButton.setBackgroundColor(resources.getColor(R.color.white, null))
+            binding.followButton.setTextColor(resources.getColor(R.color.black, null))
+        } else {
+            binding.followButton.text = "Suivre"
+            binding.followButton.setBackgroundColor(resources.getColor(R.color.red, null))
+            binding.followButton.setTextColor(resources.getColor(R.color.white, null))
+        }
     }
 
     private fun navigateToProfileVideos(videos: List<VideoWithAuthor>, position: Int) {

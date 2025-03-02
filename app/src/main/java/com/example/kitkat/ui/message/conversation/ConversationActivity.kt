@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -64,7 +65,7 @@ class ConversationActivity : AppCompatActivity() {
         adapter = ConversationAdapter(emptyList())
         recyclerView.adapter = adapter
 
-        val backButton: TextView = binding.conversationBackButton
+        val backButton: ImageButton = binding.conversationBackButton
         backButton.setOnClickListener {
             finish()
         }

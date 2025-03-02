@@ -6,6 +6,7 @@ import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -13,6 +14,7 @@ import androidx.core.content.ContextCompat
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.kitkat.app_utils.SHARED_PREF_KEY
+import com.example.kitkat.app_utils.isTokenExpired
 import com.example.kitkat.databinding.ActivityMainBinding
 import com.example.kitkat.repositories.UserRepository
 
@@ -27,8 +29,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         userRepository = UserRepository(this)
-
-        if (userRepository.getToken() != null) {
+        val token=userRepository.getToken()
+        Log.d("MainActivity", "Token récupéré: $token")
+        if (userRepository.getToken() != null && !isTokenExpired(userRepository.getToken()!!)) {
             binding = ActivityMainBinding.inflate(layoutInflater)
             setContentView(binding.root)
 

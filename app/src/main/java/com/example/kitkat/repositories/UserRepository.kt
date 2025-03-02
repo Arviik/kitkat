@@ -7,12 +7,14 @@ import com.example.kitkat.network.ApiClient
 import com.example.kitkat.network.dto.LoginRequestDTO
 import com.example.kitkat.network.dto.LoginResponseDTO
 import com.example.kitkat.network.dto.UserDTO
+import com.example.kitkat.network.dto.UserWithoutPasswordDTO
 import com.example.kitkat.network.services.UserService
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class UserRepository(context: Context) {
+class UserRepository(private val context: Context) { // ✅ Conserve le contexte en attribut
+
     private val api = ApiClient.retrofit.create(UserService::class.java)
     private val sharedPref: SharedPreferences =
         context.getSharedPreferences(SHARED_PREF_KEY, Context.MODE_PRIVATE)
@@ -23,7 +25,7 @@ class UserRepository(context: Context) {
             override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
                 if (response.isSuccessful) {
                     loginUser(
-                        LoginRequestDTO(email = userDto.email, password = userDto.password),
+                        loginRequestDTO = LoginRequestDTO(email = userDto.email, password = userDto.password),
                         onSuccess = onSuccess,
                         onError = onError
                     )
@@ -50,7 +52,7 @@ class UserRepository(context: Context) {
                     val token = response.body()?.token
                     if (token != null) {
                         saveToken(token)
-                        onSuccess()
+                        fetchUserData(token, onSuccess, onError)
                     } else {
                         onError(Exception("Token null"))
                     }
@@ -65,6 +67,38 @@ class UserRepository(context: Context) {
         })
     }
 
+    private fun fetchUserData(
+        token: String,
+        onSuccess: () -> Unit,
+        onError: (Throwable) -> Unit
+    ) {
+        val api = ApiClient.retrofit.create(UserService::class.java)
+
+        api.getCurrentUser("Bearer $token").enqueue(object : Callback<UserWithoutPasswordDTO> {
+            override fun onResponse(call: Call<UserWithoutPasswordDTO>, response: Response<UserWithoutPasswordDTO>) {
+                if (response.isSuccessful) {
+                    val user = response.body()
+                    if (user != null) {
+                        with(sharedPref.edit()) {
+                            putInt("USER_ID", user.id ?: -1)
+                            putString("USER_NAME", user.name)
+                            apply()
+                        }
+                        onSuccess()
+                    } else {
+                        onError(Exception("Réponse vide de l'API"))
+                    }
+                } else {
+                    onError(Exception("Erreur lors de la récupération de l'utilisateur: ${response.code()}"))
+                }
+            }
+
+            override fun onFailure(call: Call<UserWithoutPasswordDTO>, t: Throwable) {
+                onError(t)
+            }
+        })
+    }
+
     private fun saveToken(token: String) {
         sharedPref.edit().putString("AUTH_TOKEN", token).apply()
     }
@@ -74,6 +108,6 @@ class UserRepository(context: Context) {
     }
 
     fun logout() {
-        sharedPref.edit().remove("AUTH_TOKEN").apply()
+        sharedPref.edit().remove("AUTH_TOKEN").remove("USER_ID").remove("USER_NAME").apply()
     }
 }

@@ -180,6 +180,7 @@
         android:layout_marginBottom="8dp">
 
         <Button
+            android:id="@+id/editProfileButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Modifier le profil"
@@ -189,7 +190,9 @@
             android:padding="8dp"
             android:layout_marginEnd="8dp"/>
 
+        <!-- Partager le profil -->
         <Button
+            android:id="@+id/shareProfileButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Partager le profil"
@@ -198,6 +201,30 @@
             android:textColor="#000000"
             android:padding="8dp"
             android:layout_marginEnd="4dp"/>
+
+        <!-- Nouveau bouton Suivre -->
+        <Button
+            android:id="@+id/followButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Suivre"
+            android:textSize="11sp"
+            android:backgroundTint="#FF0000"
+            android:textColor="#FFFFFF"
+            android:padding="8dp"
+            android:visibility="gone"/>
+
+        <!-- Nouveau bouton Message -->
+        <Button
+            android:id="@+id/messageButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Message"
+            android:textSize="11sp"
+            android:backgroundTint="#EEEEEE"
+            android:textColor="#000000"
+            android:padding="8dp"
+            android:visibility="gone"/>
 
         <ImageButton
             android:layout_gravity="center"

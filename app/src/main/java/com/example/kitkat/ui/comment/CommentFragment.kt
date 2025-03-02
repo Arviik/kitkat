@@ -1,5 +1,6 @@
 package com.example.kitkat.ui.comment
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.kitkat.R
+import com.example.kitkat.app_utils.SHARED_PREF_KEY
 import com.example.kitkat.network.ApiClient
 import com.example.kitkat.network.dto.CommentDTO
 import com.example.kitkat.network.services.CommentService
@@ -55,13 +57,11 @@ class CommentFragment : BottomSheetDialogFragment() {
             .placeholder(R.drawable.ic_profil_black_font_grey_24dp)
             .into(view.findViewById(R.id.profileImage))
 
-        // 🔹 Initialisation de l'adaptateur
         comments = mutableListOf()
         adapter = CommentAdapter(comments)
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = adapter
 
-        // 🔹 Charger les commentaires
         fetchCommentsFromApi()
 
         postButton?.setOnClickListener {
@@ -164,14 +164,25 @@ class CommentFragment : BottomSheetDialogFragment() {
             return
         }
 
+        val sharedPref = requireContext().getSharedPreferences(SHARED_PREF_KEY, Context.MODE_PRIVATE)
+        val token = sharedPref.getString("AUTH_TOKEN", null)
+        val userId = sharedPref.getInt("USER_ID", -1)
+        val username = sharedPref.getString("USER_NAME", "Utilisateur inconnu") ?: "Utilisateur inconnu"
+
+        if (token.isNullOrEmpty() || userId == -1) {
+            Log.e("CommentFragment", "Utilisateur non connecté ou token absent")
+            Toast.makeText(context, "Veuillez vous reconnecter", Toast.LENGTH_SHORT).show()
+            return
+        }
+
         val commentDTO = CommentDTO(
             id = 0,
-            authorId = 1, // Remplace par l'ID de l'utilisateur actuel
+            authorId = userId,
             videoId = videoId,
             text = commentText,
             createdAt = "2025-02-28T12:00:00Z",
             likesCount = 0,
-            authorName = "Moi"
+            authorName = username
         )
 
         commentService.postComment(commentDTO).enqueue(object : Callback<CommentDTO> {
@@ -179,9 +190,6 @@ class CommentFragment : BottomSheetDialogFragment() {
                 if (response.isSuccessful) {
                     response.body()?.let { comment ->
                         Log.d("CommentFragment", "Commentaire ajouté avec succès: $comment")
-
-                        // 🔹 Vérifions si le commentaire a bien des données
-                        Log.d("CommentFragment", "ID: ${comment.id}, Texte: ${comment.text}, Auteur: ${comment.authorName}")
 
                         comments.add(0, comment)
                         adapter.notifyItemInserted(0)
@@ -199,5 +207,7 @@ class CommentFragment : BottomSheetDialogFragment() {
             }
         })
     }
+
+
 
 }

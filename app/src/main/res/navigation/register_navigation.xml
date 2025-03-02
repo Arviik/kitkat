@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:startDestination="@id/emailInputFragment">
+
+    <fragment
+        android:id="@+id/emailInputFragment"
+        android:name="com.example.kitkat.ui.login.EmailInputFragment"
+        android:label="Email Input">
+        <action
+            android:id="@+id/action_emailInputFragment_to_passwordInputFragment"
+            app:destination="@id/passwordInputFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/passwordInputFragment"
+        android:name="com.example.kitkat.ui.login.PasswordInputFragment"
+        android:label="Password Input">
+        <action
+            android:id="@+id/action_passwordInputFragment_to_usernameInputFragment"
+            app:destination="@id/usernameInputFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/usernameInputFragment"
+        android:name="com.example.kitkat.ui.login.UsernameInputFragment"
+        android:label="Username Input" />
+</navigation>

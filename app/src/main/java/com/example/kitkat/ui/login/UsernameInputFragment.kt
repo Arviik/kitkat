@@ -10,7 +10,6 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
 import com.example.kitkat.MainActivity
 import com.example.kitkat.R
 import com.example.kitkat.app_utils.SHARED_PREF_KEY
@@ -26,7 +25,6 @@ class UsernameInputFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_username_input, container, false)
-        userRepository = UserRepository(requireContext())
 
         val button = view.findViewById<Button>(R.id.button_complete)
         val usernameInput = view.findViewById<EditText>(R.id.edit_text_username)
@@ -49,7 +47,16 @@ class UsernameInputFragment : Fragment() {
                     ),
                     onSuccess = {
                         Toast.makeText(context, "Inscription réussie, connexion en cours...", Toast.LENGTH_SHORT).show()
-                        navigateToMainActivity()
+                        userRepository.loginUser(
+                            LoginRequestDTO(
+                                email = email,
+                                password = password
+                            ),
+                            onSuccess = {
+                                navigateToMainActivity()
+                            },
+                            onError = {}
+                        )
                     },
                     onError = {
                         Toast.makeText(context, "Erreur lors de l'inscription", Toast.LENGTH_SHORT).show()
@@ -62,6 +69,7 @@ class UsernameInputFragment : Fragment() {
 
         return view
     }
+
     private fun navigateToMainActivity() {
         val intent = Intent(requireContext(), MainActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK

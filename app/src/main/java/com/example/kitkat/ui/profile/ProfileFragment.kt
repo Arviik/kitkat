@@ -95,7 +95,7 @@ class ProfileFragment : Fragment() {
                 if (response.isSuccessful) {
                     val currentUser = response.body()
                     if (currentUser != null) {
-                        loadUserProfile(currentUser) // 🔥 Charger les infos du user
+                        loadUserProfile(currentUser)
                     } else {
                         Log.e("ProfileFragment", "Réponse vide de /auth/me")
                     }
@@ -126,12 +126,31 @@ class ProfileFragment : Fragment() {
 
         fetchUserVideos(user)
 
-        if (isOwnProfile) {
-            binding.myList.visibility = View.VISIBLE
+        val currentUserId = sharedPreferences.getInt("USER_ID", -1)
+
+        if (user.id == currentUserId) {
+            binding.editProfileButton.visibility = View.VISIBLE
+            binding.shareProfileButton.visibility = View.VISIBLE
+            binding.followButton.visibility = View.GONE
+            binding.messageButton.visibility = View.GONE
         } else {
-            binding.myList.visibility = View.GONE
+            binding.editProfileButton.visibility = View.GONE
+            binding.shareProfileButton.visibility = View.GONE
+            binding.followButton.visibility = View.VISIBLE
+            binding.messageButton.visibility = View.VISIBLE
+        }
+
+        // Ajoute un clic sur le bouton "Suivre"
+        binding.followButton.setOnClickListener {
+            Toast.makeText(requireContext(), "Suivi ${user.name} !", Toast.LENGTH_SHORT).show()
+        }
+
+        // Ajoute un clic sur le bouton "Message"
+        binding.messageButton.setOnClickListener {
+            Toast.makeText(requireContext(), "Message à ${user.name}", Toast.LENGTH_SHORT).show()
         }
     }
+
 
     private fun fetchUserVideos(user: UserWithoutPasswordDTO) {
         if (user.id == null) {

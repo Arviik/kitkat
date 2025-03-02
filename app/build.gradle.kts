@@ -60,6 +60,7 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
     implementation (libs.glide)
     annotationProcessor (libs.compiler)
+    implementation("com.auth0.android:jwtdecode:2.0.1")
 
 
     implementation (libs.okhttp)

@@ -58,9 +58,8 @@ class LoginFormFragment : Fragment() {
         }
 
         registrationLink.setOnClickListener {
-            //TODO redirect to registration
-
-            //findNavController().navigate(R.id.)
+            val intent = Intent(requireContext(), RegisterActivity::class.java)
+            startActivity(intent)
         }
 
         return view

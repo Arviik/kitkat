@@ -25,7 +25,7 @@ class UsernameInputFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_username_input, container, false)
-
+        userRepository = UserRepository(requireContext())
         val button = view.findViewById<Button>(R.id.button_complete)
         val usernameInput = view.findViewById<EditText>(R.id.edit_text_username)
 

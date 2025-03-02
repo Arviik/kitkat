@@ -1,14 +1,19 @@
 package com.example.kitkat.ui.profile
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.example.kitkat.R
 import com.example.kitkat.network.dto.UserWithoutPasswordDTO
@@ -22,12 +27,20 @@ import com.example.kitkat.network.services.UserService
 import com.example.kitkat.network.services.VideoService
 import com.example.kitkat.repositories.UserRepository
 import com.example.kitkat.ui.profile.video.ViewPagerRecyclerAdapter
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 class ProfileFragment : Fragment() {
-
+    private val PICK_IMAGE_REQUEST = 1001
+    private var imageUri: Uri? = null
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
     private lateinit var viewPagerAdapter: ViewPagerRecyclerAdapter
@@ -52,7 +65,9 @@ class ProfileFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
-
+        binding.plusIcon.setOnClickListener {
+            openGallery()
+        }
         val navBar = requireActivity().findViewById<View>(R.id.nav_view)
 
         if (user != null) {
@@ -235,6 +250,86 @@ class ProfileFragment : Fragment() {
             binding.followButton.setBackgroundColor(resources.getColor(R.color.red, null))
             binding.followButton.setTextColor(resources.getColor(R.color.white, null))
         }
+    }
+    private fun openGallery() {
+        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        intent.type = "image/*"
+        startActivityForResult(intent, PICK_IMAGE_REQUEST)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK && data != null) {
+            imageUri = data.data
+            imageUri?.let { uri ->
+                binding.imageViewProfile.setImageURI(uri)
+                uploadImageToAzure(uri)
+            }
+        }
+    }
+    private fun uploadImageToAzure(imageUri: Uri) {
+        val userId = sharedPreferences.getInt("USER_ID", -1)
+        if (userId == -1) {
+            Log.e("ProfileFragment", "User ID introuvable")
+            return
+        }
+
+        val inputStream = requireContext().contentResolver.openInputStream(imageUri)
+        val byteArray = inputStream?.readBytes() ?: return
+
+        val fileName = "user_${userId}_${System.currentTimeMillis()}.jpg"
+        val azureBlobUrl = "https://kitkatstorage.blob.core.windows.net/profilepicture/$fileName" +
+                "?sp=racwdli&st=2025-03-02T22:06:34Z&se=2025-05-08T05:06:34Z&sv=2022-11-02&sr=c&sig=HjJSbqWdjeDdF%2F8JzWCn1vo7zFOsX7Bk1hRs29JimJU%3D"
+
+        val requestBody = byteArray.toRequestBody("image/jpeg".toMediaTypeOrNull())
+        val request = Request.Builder()
+            .url(azureBlobUrl)
+            .put(requestBody)
+            .addHeader("x-ms-blob-type", "BlockBlob") // Obligatoire pour Azure
+            .build()
+
+        val client = OkHttpClient()
+
+        lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                val response = client.newCall(request).execute()
+                if (response.isSuccessful) {
+                    Log.d("ProfileFragment", "Image uploadée avec succès sur Azure: $azureBlobUrl")
+                    withContext(Dispatchers.Main) {
+                        updateProfilePicture(azureBlobUrl) // Mettre à jour la DB avec la nouvelle image
+                    }
+                } else {
+                    Log.e("ProfileFragment", "Erreur d'upload: ${response.code} ${response.message}")
+                }
+            } catch (e: Exception) {
+                Log.e("ProfileFragment", "Erreur réseau: ${e.message}")
+            }
+        }
+    }
+    private fun updateProfilePicture(imageUrl: String) {
+        val token = sharedPreferences.getString("AUTH_TOKEN", null)
+        if (token == null) {
+            Log.e("ProfileFragment", "Token JWT introuvable, impossible de mettre à jour l'image")
+            return
+        }
+
+        val userService = ApiClient.retrofit.create(UserService::class.java)
+        userService.updateProfilePicture("Bearer $token", imageUrl).enqueue(object : Callback<Unit> {
+            override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
+                if (response.isSuccessful) {
+                    // Met à jour l'UI avec la nouvelle image
+                    Glide.with(requireContext()).load(imageUrl).into(binding.imageViewProfile)
+                    Toast.makeText(requireContext(), "Photo de profil mise à jour", Toast.LENGTH_SHORT).show()
+                } else {
+                    Log.e("ProfileFragment", "Échec de la mise à jour du profil: ${response.code()}")
+                }
+            }
+
+            override fun onFailure(call: Call<Unit>, t: Throwable) {
+                Log.e("ProfileFragment", "Erreur réseau: ${t.message}")
+            }
+        })
     }
 
     private fun navigateToProfileVideos(videos: List<VideoWithAuthor>, position: Int) {

@@ -9,6 +9,7 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Path
 
 interface UserService {
@@ -32,4 +33,10 @@ interface UserService {
 
     @POST("users/{id}/unfollow")
     fun unfollowUser(@Path("id") userId: Int, @Body followerId: Int): Call<Unit>
+
+    @PUT("/users/update-profile-picture")
+    fun updateProfilePicture(
+        @Header("Authorization") token: String,
+        @Body imageUrl: String
+    ): Call<Unit>
 }

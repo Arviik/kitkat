@@ -1,7 +1,6 @@
 package com.example.kitkat
 
 import android.Manifest
-import android.content.Context
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.os.Build
@@ -13,7 +12,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
-import com.example.kitkat.app_utils.SHARED_PREF_KEY
+import com.example.kitkat.app_utils.NotificationScheduler
+import com.example.kitkat.app_utils.notification.NotificationHelper
 import com.example.kitkat.app_utils.isTokenExpired
 import com.example.kitkat.databinding.ActivityMainBinding
 import com.example.kitkat.repositories.UserRepository
@@ -29,6 +29,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         userRepository = UserRepository(this)
+
+        //Notifaction
+        NotificationHelper.createNotificationChannel(this)
         val token=userRepository.getToken()
         Log.d("MainActivity", "Token récupéré: $token")
         if (userRepository.getToken() != null && !isTokenExpired(userRepository.getToken()!!)) {

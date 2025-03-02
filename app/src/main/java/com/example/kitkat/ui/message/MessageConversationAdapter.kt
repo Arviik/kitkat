@@ -10,7 +10,7 @@ import com.example.kitkat.model.ConversationItem
 
 class MessageConversationAdapter(
     private var conversations: List<ConversationItem>,
-    private val onConversationClick: (username: String, id: String) -> Unit
+    private val onConversationClick: (username: String, id: Int) -> Unit
 ) : RecyclerView.Adapter<MessageConversationAdapter.MessageConversationViewHolder>() {
 
     class MessageConversationViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -31,7 +31,7 @@ class MessageConversationAdapter(
         holder.username.text = conversation.username
 
         holder.itemView.setOnClickListener {
-            onConversationClick(conversation.username, "1")
+            onConversationClick(conversation.username, conversation.id)
         }
     }
 

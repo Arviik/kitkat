@@ -1,5 +1,7 @@
 package com.example.kitkat.network.dto
 
+import java.io.Serializable
+
 data class Message (
     val senderId: Int,
     val receiverId: Int,
@@ -7,4 +9,4 @@ data class Message (
     val createdAt: String,
     val conversationId: Int,
     val isSystemMessage: Boolean = false
-)
+) : Serializable

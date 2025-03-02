@@ -35,20 +35,20 @@ class MessageRepository {
 
     fun sendMessageToConversation(
         message: Message,
-        onSuccess: (List<Message>) -> Unit,
+        onSuccess: () -> Unit,
         onError: (Throwable) -> Unit
     ) {
         val call = api.sendMessageToConversation(message)
-        call.enqueue(object : Callback<List<Message>> {
-            override fun onResponse(call: Call<List<Message>>, response: Response<List<Message>>) {
+        call.enqueue(object : Callback<Void> {
+            override fun onResponse(call: Call<Void>, response: Response<Void>) {
                 if (response.isSuccessful) {
-                    response.body()?.let { onSuccess(it) } ?: onError(Exception("No data"))
+                    onSuccess()
                 } else {
                     onError(Exception("API error: ${response.code()}"))
                 }
             }
 
-            override fun onFailure(call: Call<List<Message>>, t: Throwable) {
+            override fun onFailure(call: Call<Void>, t: Throwable) {
                 onError(t)
             }
         })

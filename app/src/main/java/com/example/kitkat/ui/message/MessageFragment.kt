@@ -1,6 +1,8 @@
 package com.example.kitkat.ui.message
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -12,6 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.kitkat.R
+import com.example.kitkat.app_utils.SHARED_PREF_KEY
 import com.example.kitkat.databinding.FragmentMessageBinding
 import com.example.kitkat.model.ConversationItem
 import com.example.kitkat.repositories.ConversationRepository
@@ -22,6 +25,7 @@ class MessageFragment : Fragment() {
     private var _binding: FragmentMessageBinding? = null
     private val binding get() = _binding!!
 
+    private lateinit var sharedPref: SharedPreferences
     private val conversationRepository = ConversationRepository()
     private lateinit var adapter: MessageConversationAdapter
 
@@ -32,6 +36,8 @@ class MessageFragment : Fragment() {
     ): View {
         _binding = FragmentMessageBinding.inflate(inflater, container, false)
         val view = binding.root
+        sharedPref = requireContext().getSharedPreferences(SHARED_PREF_KEY, Context.MODE_PRIVATE)
+
 
         val recyclerView: RecyclerView = binding.messageRecyclerView
         recyclerView.layoutManager = LinearLayoutManager(context)
@@ -61,13 +67,14 @@ class MessageFragment : Fragment() {
     }
 
     private fun loadUserConversations() {
-        conversationRepository.getConversationsByUser(2,
+        conversationRepository.getConversationsByUser(sharedPref.getInt("USER_ID", -1),
             { conversations ->
                 if (isAdded) { // Vérifie si le fragment est encore attaché
                     val items = conversations.map {
                         ConversationItem(
-                            username = "${it.username}",
-                            lastMessage = "${it.lastMessage}",
+                            id = it.id,
+                            username = it.username ?: "",
+                            lastMessage = it.lastMessage ?: "",
                             profilePicUrl = ""
                         )
                     }
@@ -89,7 +96,7 @@ class MessageFragment : Fragment() {
         adapter.updateItems(items)
     }
 
-    private val onConversationClick = { username: String, id: String ->
+    private val onConversationClick = { username: String, id: Int ->
         val intent = Intent(context, ConversationActivity::class.java)
         intent.putExtra("USERNAME", username)
         intent.putExtra("CONVERSATION_ID", id)

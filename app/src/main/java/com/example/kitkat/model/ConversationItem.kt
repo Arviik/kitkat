@@ -3,8 +3,9 @@ package com.example.kitkat.model
 import android.os.Parcel
 import android.os.Parcelable
 
-data class ConversationItem(val username: String, val lastMessage: String, val profilePicUrl: String) : Parcelable{
+data class ConversationItem(val id: Int ,val username: String, val lastMessage: String, val profilePicUrl: String) : Parcelable{
     constructor(parcel: Parcel) : this(
+        parcel.readInt(),
         parcel.readString().toString(),
         parcel.readString().toString(),
         parcel.readString().toString()
@@ -12,6 +13,7 @@ data class ConversationItem(val username: String, val lastMessage: String, val p
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeInt(id)
         parcel.writeString(username)
         parcel.writeString(lastMessage)
         parcel.writeString(profilePicUrl)

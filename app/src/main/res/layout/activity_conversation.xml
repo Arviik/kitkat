@@ -39,11 +39,14 @@
 
         </LinearLayout>
 
-        <TextView
+        <ImageButton
             android:id="@+id/conversationBackButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="back" />
+            android:src="@drawable/ic_arrow_back"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:layout_margin="10dp"
+            android:contentDescription="back" />
     </FrameLayout>
 
 
@@ -86,12 +89,13 @@
                 android:inputType="text" />
 
         </LinearLayout>
-        <Button
+        <ImageButton
             android:id="@+id/sendMessageButton"
             android:padding="10dp"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_weight="0.6"
+            android:src="@drawable/baseline_send_24"
             android:backgroundTint="@color/teal_700"
             android:text="Send"/>
     </LinearLayout>

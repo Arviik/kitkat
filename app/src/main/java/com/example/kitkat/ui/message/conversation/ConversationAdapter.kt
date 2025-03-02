@@ -11,7 +11,7 @@ import com.example.kitkat.model.ConversationItem
 import com.example.kitkat.model.MessageItem
 import com.example.kitkat.model.MessageSender
 
-class ConversationAdapter(private var messages: List<MessageItem>) :
+class ConversationAdapter(var messages: List<MessageItem>) :
     RecyclerView.Adapter<ConversationAdapter.ConversationViewHolder>() {
 
     class ConversationViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

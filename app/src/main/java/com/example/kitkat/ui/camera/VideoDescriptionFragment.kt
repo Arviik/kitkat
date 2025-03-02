@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.kitkat.R
+import com.example.kitkat.app_utils.SHARED_PREF_KEY
 import com.example.kitkat.network.dto.VideoDTO
 import com.example.kitkat.network.ApiClient
 import com.example.kitkat.network.services.AzureUploadService
@@ -184,9 +185,17 @@ class VideoDescriptionFragment : Fragment() {
      * Enregistre la vidéo dans l'API après upload Azure
      */
     private fun postVideoToAPI() {
+        val sharedPref = requireContext().getSharedPreferences(SHARED_PREF_KEY, Context.MODE_PRIVATE)
+        val userId = sharedPref.getInt("USER_ID", -1)
+
+        if (userId == -1) {
+            Toast.makeText(requireContext(), "Erreur: utilisateur non trouvé", Toast.LENGTH_SHORT).show()
+            Log.e("APIUpload", "Impossible de récupérer l'ID de l'utilisateur connecté.")
+            return
+        }
+
         val videoTitle = descriptionInput.text.toString().trim().ifEmpty { "Vidéo sans titre" }
         val videoDuration = 120
-        val authorId = 1
         val createdAt = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault()).apply {
             timeZone = TimeZone.getTimeZone("UTC")
         }.format(Date())
@@ -194,21 +203,29 @@ class VideoDescriptionFragment : Fragment() {
         val videoDTO = VideoDTO(
             title = videoTitle,
             duration = videoDuration,
-            authorId = authorId,
+            authorId = userId,
             videoUrl = videoUrl!!,
             thumbnailUrl =  thumbnailUrl!!,
             createdAt = createdAt,
             isPublic = true
         )
+
         ApiClient.retrofit.create(VideoService::class.java).postVideo(videoDTO)
             .enqueue(object : Callback<VideoDTO> {
                 override fun onResponse(call: Call<VideoDTO>, response: Response<VideoDTO>) {
-                    Toast.makeText(requireContext(), "Vidéo publiée !", Toast.LENGTH_SHORT).show()
-                    findNavController().navigate(R.id.navigation_profile)
+                    if (response.isSuccessful) {
+                        Toast.makeText(requireContext(), "Vidéo publiée !", Toast.LENGTH_SHORT).show()
+                        findNavController().navigate(R.id.navigation_profile)
+                    } else {
+                        Toast.makeText(requireContext(), "Erreur lors de la publication", Toast.LENGTH_SHORT).show()
+                        Log.e("APIUpload", "Échec de l'ajout de la vidéo: ${response.code()} - ${response.message()}")
+                    }
                 }
+
                 override fun onFailure(call: Call<VideoDTO>, t: Throwable) {
                     Log.e("APIUpload", "Erreur réseau: ${t.message}", t)
                 }
             })
     }
+
 }

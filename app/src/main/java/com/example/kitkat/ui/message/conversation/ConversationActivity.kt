@@ -6,6 +6,8 @@ import android.util.AttributeSet
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.Button
+import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -18,15 +20,22 @@ import com.example.kitkat.R
 import com.example.kitkat.databinding.ActivityConversationBinding
 import com.example.kitkat.model.MessageItem
 import com.example.kitkat.model.MessageSender
+import com.example.kitkat.network.dto.Message
 import com.example.kitkat.repositories.MessageRepository
+import java.text.SimpleDateFormat
+import java.util.Date
 import kotlin.math.log
 
 class ConversationActivity : AppCompatActivity() {
     private lateinit var binding: ActivityConversationBinding
 
 
+
     private val messageRepository = MessageRepository()
     private lateinit var adapter: ConversationAdapter
+    private lateinit var messageInput: EditText
+
+    private var conversationId: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,8 +62,13 @@ class ConversationActivity : AppCompatActivity() {
 
         val senderTextView: TextView = binding.tabMessageSender
         senderTextView.text = intent.getStringExtra("USERNAME") ?: "undefined"
+        conversationId = intent.getStringExtra("CONVERSATION_ID")?.toInt() ?: 0
+        messageInput = binding.messageInput
 
-
+        val sendButton = binding.sendMessageButton
+        sendButton.setOnClickListener {
+            sendMessage()
+        }
 
         loadConversationMessages()
     }
@@ -69,7 +83,7 @@ class ConversationActivity : AppCompatActivity() {
         messageRepository.getMessagesByConversation(4,
             { conversations ->
                 val items = conversations.map {
-                    val sender: MessageSender = when (it.senderId){
+                    val sender: MessageSender = when (it.senderId) {
                         2 -> MessageSender.ME;
                         else -> {
                             if (it.isSystemMessage) {
@@ -97,6 +111,30 @@ class ConversationActivity : AppCompatActivity() {
                 updateRecyclerView(emptyList())
             }
         )
+    }
+
+    private fun sendMessage() {
+        val sdf = SimpleDateFormat("dd/M/yyyy hh:mm:ss")
+        val currentDate = sdf.format(Date())
+        val message: Message = Message(
+            1,
+            1,
+            messageInput.text.toString(),
+            conversationId = conversationId,
+            createdAt = sdf.format(currentDate),
+            isSystemMessage = false
+        )
+        messageRepository.sendMessageToConversation(message,
+            onSuccess = {
+                messageInput.setText("")
+                loadConversationMessages()
+            },
+            onError = { error ->
+                Log.e("ERROR", "loadUserConversations: ${error.message}")
+                Toast.makeText(applicationContext, "Erreur : ${error.message}", Toast.LENGTH_SHORT)
+                    .show()
+                updateRecyclerView(emptyList())
+            })
     }
 
     private fun updateRecyclerView(items: List<MessageItem>) {

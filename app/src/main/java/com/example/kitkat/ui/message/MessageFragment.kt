@@ -92,6 +92,7 @@ class MessageFragment : Fragment() {
     private val onConversationClick = { username: String, id: String ->
         val intent = Intent(context, ConversationActivity::class.java)
         intent.putExtra("USERNAME", username)
+        intent.putExtra("CONVERSATION_ID", id)
         startActivity(intent)
     }
 }

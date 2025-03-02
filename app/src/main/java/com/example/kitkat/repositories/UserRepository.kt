@@ -66,6 +66,7 @@ class UserRepository(context: Context) {
     }
 
     private fun saveToken(token: String) {
+        println("Token: $token")
         sharedPref.edit().putString("AUTH_TOKEN", token).apply()
     }
 

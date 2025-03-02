@@ -1,6 +1,6 @@
 package com.example.kitkat.ui.login
 
-import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,19 +10,21 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
+import com.example.kitkat.MainActivity
 import com.example.kitkat.R
-import com.example.kitkat.app_utils.SHARED_PREF_KEY
 import com.example.kitkat.network.dto.LoginRequestDTO
 import com.example.kitkat.repositories.UserRepository
 
 class LoginFormFragment : Fragment() {
+    private lateinit var userRepository: UserRepository
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_login_form, container, false)
+        userRepository = UserRepository(requireContext())
 
         val button = view.findViewById<Button>(R.id.button_continue)
         val emailInput = view.findViewById<EditText>(R.id.edit_text_email)
@@ -41,21 +43,13 @@ class LoginFormFragment : Fragment() {
                 return@setOnClickListener
             }
 
-            UserRepository.loginUser(
+            userRepository.loginUser(
                 LoginRequestDTO(
                     email = emailInput.text.toString(),
                     password = passwordInput.text.toString()
                 ),
                 onSuccess = {
-                    val sharedPref = activity?.getSharedPreferences(SHARED_PREF_KEY, Context.MODE_PRIVATE) ?: return@loginUser
-                    with(sharedPref.edit()) {
-                        putString("AUTH_TOKEN", it.token)
-                        apply()
-                    }
-
-                    //TODO redirect to main app
-
-                    //findNavController().navigate(R.id.)
+                    navigateToMainActivity()
                 },
                 onError = {
                     Toast.makeText(context, "Email ou mot de passe incorrect", Toast.LENGTH_SHORT).show()
@@ -70,5 +64,11 @@ class LoginFormFragment : Fragment() {
         }
 
         return view
+    }
+
+    private fun navigateToMainActivity() {
+        val intent = Intent(requireContext(), MainActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
     }
 }

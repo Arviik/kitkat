@@ -18,6 +18,8 @@ import com.example.kitkat.network.dto.UserDTO
 import com.example.kitkat.repositories.UserRepository
 
 class UsernameInputFragment : Fragment() {
+    private lateinit var userRepository: UserRepository
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -37,7 +39,7 @@ class UsernameInputFragment : Fragment() {
 
                 println("email: $email password: $password username: $username")
 
-                UserRepository.registerUser(
+                userRepository.registerUser(
                     UserDTO(
                         name = username,
                         email = email,
@@ -45,17 +47,12 @@ class UsernameInputFragment : Fragment() {
                     ),
                     onSuccess = {
                         Toast.makeText(context, "Inscription réussie, connexion en cours...", Toast.LENGTH_SHORT).show()
-                        UserRepository.loginUser(
+                        userRepository.loginUser(
                             LoginRequestDTO(
                                 email = email,
                                 password = password
                             ),
                             onSuccess = {
-                                with(sharedPref.edit()) {
-                                    putString("AUTH_TOKEN", it.token)
-                                    apply()
-                                }
-
                                 navigateToMainActivity()
                             },
                             onError = {}

@@ -30,7 +30,7 @@ class EmailInputFragment : Fragment() {
                     putString("email", emailInput.text.toString())
                     apply()
                 }
-                findNavController().navigate(R.id.action_emailInputFragment_to_codeVerificationFragment)
+                findNavController().navigate(R.id.action_emailInputFragment_to_passwordInputFragment)
             } else {
                 Toast.makeText(context, "Veuillez entrer un email valide", Toast.LENGTH_SHORT).show()
             }

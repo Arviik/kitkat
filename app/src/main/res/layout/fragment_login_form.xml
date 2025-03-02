@@ -7,36 +7,46 @@
     android:padding="16dp">
 
     <TextView
-        android:id="@+id/tv_code_title"
+        android:id="@+id/tv_email_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Consulte tes e-mails"
+        android:text="Connexion"
         android:textSize="24sp"
         android:textStyle="bold"
         android:layout_gravity="center" />
 
-    <TextView
+    <EditText
+        android:id="@+id/edit_text_email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Utilise le lien ou saisis le code envoyé à ton adresse e-mail."
-        android:layout_marginTop="16dp"
-        android:textSize="14sp" />
+        android:hint="Adresse e-mail"
+        android:inputType="textEmailAddress"
+        android:layout_marginTop="24dp" />
 
     <EditText
-        android:id="@+id/edit_text_code"
+        android:id="@+id/edit_text_password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Code de vérification"
-        android:inputType="number"
+        android:hint="Mot de passe"
+        android:inputType="textPassword"
         android:layout_marginTop="24dp" />
 
     <Button
-        android:id="@+id/button_verify"
+        android:id="@+id/button_continue"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:text="Vérifier"
+        android:text="Continuer"
         android:backgroundTint="#FF6F91"
         android:textColor="#FFFFFF" />
+
+    <TextView
+        android:id="@+id/registration_link"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Créer un compte"
+        android:textSize="16sp"
+        android:textColor="@color/blue"
+        android:layout_gravity="center" />
 
 </LinearLayout>

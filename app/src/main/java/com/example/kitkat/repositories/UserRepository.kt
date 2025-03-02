@@ -100,6 +100,7 @@ class UserRepository(private val context: Context) { // ✅ Conserve le contexte
     }
 
     private fun saveToken(token: String) {
+        println("Token: $token")
         sharedPref.edit().putString("AUTH_TOKEN", token).apply()
     }
 
